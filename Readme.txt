@@ -1,5 +1,5 @@
 /*************************************************************************
-** Author: JiinxC											            **
+** Author: KyleH276											            **
 ** Name: Ultra File Manager	   									        **
 ** Purpose: Used to quickly move or copy many files for point A to B.   **
 ** Date: 10/6/2017														**
