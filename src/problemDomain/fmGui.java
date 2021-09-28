@@ -26,59 +26,76 @@ public class fmGui
 {
 	//All needed objects for the GUI are created here.
 	
+	// need to tweak this file, and optimize it.
+	
 	private JFrame frmSabreFileManager;
 	private ImageIcon img = new ImageIcon("res/FileManager.png");
 	private JTextField destinationField;
 	private JTextField sourceField;
-	private JTextField destinationFieldCopy;
-	private JTextField sourceFieldCopy;
 	private JTextField customField;
-	private JTextField customFieldCopy;
+	
 	private JPanel mainPanel = new JPanel();
+	private JPanel movePanel = new JPanel();
+	private JPanel copyPanel = new JPanel();
+	private JPanel activePanel = new JPanel();
+	
 	private JLabel lblStart = new JLabel("Please Select A File Operation:");
+	private JLabel lbldesc1 = new JLabel("To begin choose a source");
+	private JLabel lbldesc2 = new JLabel(" and destination for your files:");
+	private JLabel lblDestination = new JLabel("Destination:");
+	private JLabel lblSource = new JLabel("Source:");
+	private JLabel lblCustomFiletype = new JLabel("Custom Filetype:");
+	private JLabel lblFileTypes = new JLabel("What file types do you want to move:");
+	
 	private JButton btnExit = new JButton("Exit Program");
 	private JButton btnMoveFiles = new JButton("Move Files");
 	private JButton btnOpenGithub = new JButton("Open Github");
-	private JPanel movePanel = new JPanel();
 	private JButton btnCopyFiles = new JButton("Copy Files");
-	private JLabel lbldesc2 = new JLabel(" and destination for your files:");
-	private JLabel lbldesc1 = new JLabel("To begin choose a source");
-	private JLabel lbldesc2copy = new JLabel(" and destination for your files:");
-	private JLabel lbldesc1copy = new JLabel("To begin choose a source");
-	private JLabel lblDestination = new JLabel("Destination:");
-	private JLabel lblDestinationCopy = new JLabel("Destination:");
-	private JLabel lblSource = new JLabel("Source:");
-	private JLabel lblSourceCopy = new JLabel("Source:");
 	private JButton btnSrc = new JButton("...");
 	private JButton btnDst = new JButton("...");
-	private JButton btnSrcCopy = new JButton("...");
-	private JButton btnDstCopy = new JButton("...");
-	private JLabel lblCustomFiletype = new JLabel("Custom Filetype:");
-	private JLabel lblCustomFiletypeCopy = new JLabel("Custom Filetype:");
-	private JLabel lblFileTypes = new JLabel("What file types do you want to move:");
-	private JLabel lblFileTypesCopy = new JLabel("What file types do you want to copy:");
+	
+	private ButtonGroup radio = new ButtonGroup();
+	
 	private JRadioButton rdbtnCustomOnly = new JRadioButton("Custom Only");
 	private JRadioButton rdbtnDefaultOnly = new JRadioButton("Default Only");
-	private JRadioButton rdbtnCustomOnlyCopy = new JRadioButton("Custom Only");
-	private JRadioButton rdbtnDefaultOnlyCopy = new JRadioButton("Default Only");
 	private JRadioButton rdbtnBoth = new JRadioButton("Both");
-	private JRadioButton rdbtnBothCopy = new JRadioButton("Both");
+	
 	private JButton moveFilesFinal = new JButton("Move Files");
 	private JButton copyFilesFinal = new JButton("Copy Files");
 	private JButton mainMenuBtn = new JButton("Main Menu");
-	private JButton mainMenuBtnCopy = new JButton("Main Menu");
+	
 	private ActionListener actionListener = new MyActionListener();
+	
+	
+	
+	// make the move and copy screen one, and have a radio button to pick which one you use.
+	
+	//duplicates that could be designed out.
+	private JTextField destinationFieldCopy;
+	private JTextField sourceFieldCopy;
+	private JTextField customFieldCopy;
+	private JLabel lblCustomFiletypeCopy = new JLabel("Custom Filetype:");
+	private JLabel lblFileTypesCopy = new JLabel("What file types do you want to copy:");
+	private JLabel lbldesc2copy = new JLabel(" and destination for your files:");
+	private JLabel lbldesc1copy = new JLabel("To begin choose a source");
+	private JLabel lblDestinationCopy = new JLabel("Destination:");
+	private JLabel lblSourceCopy = new JLabel("Source:");
+	private JRadioButton rdbtnCustomOnlyCopy = new JRadioButton("Custom Only");
+	private JRadioButton rdbtnDefaultOnlyCopy = new JRadioButton("Default Only");
+	private JRadioButton rdbtnBothCopy = new JRadioButton("Both");
+	private JButton mainMenuBtnCopy = new JButton("Main Menu");
 	public JFileChooser SourceFC = new JFileChooser();
 	public JFileChooser DestFC = new JFileChooser();
-	private ButtonGroup radio = new ButtonGroup();
+	private JButton btnSrcCopy = new JButton("...");
+	private JButton btnDstCopy = new JButton("...");
 	private ButtonGroup radioCopy = new ButtonGroup();
-	private JPanel copyPanel = new JPanel();
+	
+	
 	private FileManager fm = new FileManager();
-	private JPanel activePanel = new JPanel();
 
 	public static void main(String[] args)
 	{
-		//This create a new proccess for the program to use.
+		//This create a new process for the program to use.
 		EventQueue.invokeLater(new Runnable()
 		{
 			public void run()
@@ -99,6 +116,10 @@ public class fmGui
 	{
 		//This initilizes all the guis components and creates the panels for main menu, copy and move.
 		initialize();
+	}
+	public String getDestination()
+	{
+		return destinationField.toString();
 	}
 	private void initialize()
 	{
@@ -454,7 +475,7 @@ private class MyActionListener implements ActionListener
 				/*This method will make the main panel invisible 
 				 * then make the move panel visible and resize the window.
 				 * it will also follow the last position of the window when 
-				 * resizing instead of putting it at a hardcoded location. 
+				 * resizing instead of putting it at a hard coded location.
 				 */
 				copyPanel.setVisible(false);
 				mainPanel.setVisible(false);
@@ -493,6 +514,7 @@ private class MyActionListener implements ActionListener
 						 */
 						if(rdbtnBoth.isSelected())
 						{
+							
 							/*Creates a new FileManager object and sets the starting point and end point
 							 * for the files to be moved then sets the custom filetype.
 							 * Finally moves the files that are included in the specified settings.
@@ -502,7 +524,8 @@ private class MyActionListener implements ActionListener
 							fm.setStart(sourceField.getText());
 							fm.setEnd(destinationField.getText());
 							fm.setCustom(customField.getText());
-							fm.runBoth(activePanel);
+							fm.moveFiles(activePanel);
+							
 						}
 						if(rdbtnCustomOnly.isSelected())
 						{
@@ -515,7 +538,7 @@ private class MyActionListener implements ActionListener
 							fm.setStart(sourceField.getText());
 							fm.setEnd(destinationField.getText());
 							fm.setCustom(customField.getText());
-							fm.runCustom(activePanel);
+							
 						}
 						if(rdbtnDefaultOnly.isSelected())
 						{
@@ -526,7 +549,7 @@ private class MyActionListener implements ActionListener
 							FileManager fm = new FileManager();
 							fm.setStart(sourceField.getText());
 							fm.setEnd(destinationField.getText());
-							fm.runAll(activePanel);
+							
 						}
 					}
 				}
@@ -553,7 +576,7 @@ private class MyActionListener implements ActionListener
 							fm.setStart(sourceFieldCopy.getText());
 							fm.setEnd(destinationFieldCopy.getText());
 							fm.setCustom(customFieldCopy.getText());
-							fm.runBothCopy(activePanel);
+							
 						}
 						if(rdbtnCustomOnlyCopy.isSelected())
 						{
@@ -566,7 +589,7 @@ private class MyActionListener implements ActionListener
 							fm.setStart(sourceFieldCopy.getText());
 							fm.setEnd(destinationFieldCopy.getText());
 							fm.setCustom(customFieldCopy.getText());
-							fm.runCustomCopy(activePanel);
+							
 						}
 						if(rdbtnDefaultOnlyCopy.isSelected())
 						{
@@ -577,7 +600,7 @@ private class MyActionListener implements ActionListener
 							FileManager fm = new FileManager();
 							fm.setStart(sourceFieldCopy.getText());
 							fm.setEnd(destinationFieldCopy.getText());
-							fm.runDefaultCopy(activePanel);
+							
 						}
 					}
 				}

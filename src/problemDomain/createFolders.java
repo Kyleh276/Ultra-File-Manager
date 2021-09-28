@@ -14,6 +14,7 @@ public class createFolders extends Thread
 	 *  in order to organize them.
 	 */
 	FileManager fm = new FileManager();
+	
 	public createFolders()
 	{
 		//This method creates an object in order to reference the below methods.
@@ -23,8 +24,12 @@ public class createFolders extends Thread
 		//This method will create all the folders needed for the default setting.
 		//specify file variable in order to close the file after creation?
 		
+		// Create file with the correct destination.
 		File folder = new File(end);
-		folder.mkdirs();
+		// If the doesn't folder already exist.
+		if(!folder.exists())
+			// Create the folder.
+			folder.mkdirs();
 	}
 	public void createCustom(String end)
 	{
