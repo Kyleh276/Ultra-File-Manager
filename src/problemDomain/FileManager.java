@@ -109,7 +109,11 @@ public class FileManager extends Thread
 		// Return the list of files that failed to move.
 		return failedList;
 	}
-
+	protected List<String> copyFiles(JPanel activePanel)
+	{
+		List<String> failedList = new ArrayList<>();
+		return failedList;
+	}
 	public void setStart(String start)
 	{
 		/*This Method will set the starting position for the file
