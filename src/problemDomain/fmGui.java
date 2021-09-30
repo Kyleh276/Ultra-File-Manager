@@ -15,12 +15,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 
 public class fmGui
 {
@@ -32,6 +35,7 @@ public class fmGui
 	private ImageIcon img = new ImageIcon("res/FileManager.png");
 	private JTextField destinationField;
 	private JTextField sourceField;
+	private JTextField addFileTypeField;
 	
 	private JPanel mainPanel = new JPanel();
 	private JPanel filePanel = new JPanel();
@@ -43,9 +47,8 @@ public class fmGui
 	private JLabel lblSource = new JLabel("Source:");
 	
 	private JLabel lblFileTypes = new JLabel("Select the file types to process:");
-	
-	
-	
+	private JLabel lblFileOperationType = new JLabel("Select the operation type:");
+	private JLabel lblFileTypeList = new JLabel("Add the desired file types:");
 	
 	private JButton btnManageFiles = new JButton("Manage Files");
 	private JButton btnExit = new JButton("Exit");
@@ -55,6 +58,9 @@ public class fmGui
 	private JButton mainMenuBtn = new JButton("Main Menu");
 	private JButton btnSrc = new JButton("...");
 	private JButton btnDst = new JButton("...");
+	private JButton btnAddFileType = new JButton("Add");
+	
+	private JList fileTypesList = new JList();
 	
 	private ButtonGroup fileOperationRadio = new ButtonGroup();
 	private ButtonGroup fileTypeRadioG = new ButtonGroup();
@@ -66,6 +72,7 @@ public class fmGui
 	private JRadioButton rdbtnAllFileTypes = new JRadioButton("All Types");
 	private JRadioButton rdbtnFileTypeList = new JRadioButton("Custom Types");
 	
+	private JScrollPane fileTypeScrollPane = new JScrollPane(fileTypesList);
 	
 	
 	// make check boxes for the user to decide the file types.
@@ -111,10 +118,11 @@ public class fmGui
 	}
 	private void initialize()
 	{
-		/*This is the meat of the GUI and contains all of the color and positional settings of the buttons and labels
-		 * As well as that it also creates all of the Label, button, actionListener, JFrame, and JPanel object that the GUI uses.
-		 * This section looks intimidating at first glance but is very repetitive upon closer inspection. 
-		 */
+		// This is the meat of the GUI and contains all of the color and positional settings of the buttons and labels
+		// As well as that it also creates all of the Label, button, actionListener, JFrame, and JPanel object that the GUI uses.
+		// This section looks intimidating at first glance but is very repetitive upon closer inspection. 
+		
+		// Set the default values for the window.
 		frmSabreFileManager = new JFrame();
 		frmSabreFileManager.setIconImage(img.getImage());
 		frmSabreFileManager.setResizable(false);
@@ -124,13 +132,14 @@ public class fmGui
 		frmSabreFileManager.setBackground(Color.BLACK);
 		frmSabreFileManager.getContentPane().setBackground(Color.BLACK);
 		frmSabreFileManager.getContentPane().setForeground(Color.WHITE);
-		frmSabreFileManager.setBounds(100, 100, 324, 184);
+		frmSabreFileManager.setBounds(100, 100, 324, 174);
 		frmSabreFileManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSabreFileManager.getContentPane().setLayout(null);
 		frmSabreFileManager.getContentPane().add(mainPanel);
 		frmSabreFileManager.setVisible(true);
 		frmSabreFileManager.getContentPane().add(filePanel);
 		
+		// Set the default values for the labels.
 		lblStart.setBounds(80, 10, 279, 16);
 		lblStart.setFont(new Font("OCR A Extended", Font.PLAIN, 15));
 		lblStart.setForeground(Color.WHITE);
@@ -147,11 +156,19 @@ public class fmGui
 		lblDestination.setForeground(Color.WHITE);
 		lblDestination.setBounds(26, 74, 103, 22);
 		
-		
 		lblFileTypes.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		lblFileTypes.setForeground(Color.WHITE);
 		lblFileTypes.setBounds(26, 106, 272, 16);
 		
+		lblFileOperationType.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
+		lblFileOperationType.setForeground(Color.WHITE);
+		lblFileOperationType.setBounds(26, 156, 272, 16);
+		
+		lblFileTypeList.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
+		lblFileTypeList.setForeground(Color.WHITE);
+		lblFileTypeList.setBounds(320, 15, 272, 16);
+		
+		// Set the default values for the buttons.
 		btnManageFiles.setBounds(86, 35, 153, 25);
 		btnManageFiles.addActionListener(actionListener);
 		btnManageFiles.setFont(new Font("OCR A Extended", Font.PLAIN, 15));
@@ -176,27 +193,37 @@ public class fmGui
 		btnSrc.setForeground(Color.WHITE);
 		btnSrc.addActionListener(actionListener);
 		btnSrc.setFont(new Font("Arial", Font.BOLD, 16));
-		btnSrc.setBackground(Color.GRAY);
-		btnSrc.setBounds(280, 45, 25, 25);
+		btnSrc.setBackground(Color.BLACK);
+		btnSrc.setBounds(270, 45, 25, 25);
+		btnSrc.setVerticalAlignment(3);
 		
 		btnDst.setForeground(Color.WHITE);
 		btnDst.setFont(new Font("Arial", Font.BOLD, 16));
-		btnDst.setBackground(Color.GRAY);
-		btnDst.setBounds(280, 74, 25, 25);
+		btnDst.setBackground(Color.BLACK);
+		btnDst.setBounds(270, 74, 25, 25);
+		btnDst.setVerticalAlignment(3);
 		btnDst.addActionListener(actionListener);
+		
+		btnAddFileType.setForeground(Color.WHITE);
+		btnAddFileType.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
+		btnAddFileType.setBackground(Color.BLACK);
+		btnAddFileType.setBounds(455, 45, 80, 25);
+		btnAddFileType.addActionListener(actionListener);
 		
 		startFileOperation.setForeground(Color.WHITE);
 		startFileOperation.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		startFileOperation.setBackground(Color.BLACK);
-		startFileOperation.setBounds(187, 206, 118, 25);
+		startFileOperation.setBounds(180, 210, 118, 25);
 		startFileOperation.addActionListener(actionListener);
 		
 		mainMenuBtn.setForeground(Color.WHITE);
 		mainMenuBtn.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		mainMenuBtn.setBackground(Color.BLACK);
-		mainMenuBtn.setBounds(187, 230, 118, 25);
+		mainMenuBtn.setBounds(26, 210, 118, 25);
 		mainMenuBtn.addActionListener(actionListener);
 		
+		
+		// Set the default values for the radio buttons.
 		rdbtnAllFileTypes.setForeground(Color.WHITE);
 		rdbtnAllFileTypes.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		rdbtnAllFileTypes.setBackground(Color.BLACK);
@@ -212,56 +239,78 @@ public class fmGui
 		rdbtnMoveFiles.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		rdbtnMoveFiles.setForeground(Color.WHITE);
 		rdbtnMoveFiles.setBackground(Color.BLACK);
-		rdbtnMoveFiles.setBounds(23, 230, 134, 25);
+		rdbtnMoveFiles.setBounds(140, 180, 134, 25);
 		rdbtnMoveFiles.addActionListener(actionListener);
 		
 		rdbtnCopyFiles.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		rdbtnCopyFiles.setForeground(Color.WHITE);
 		rdbtnCopyFiles.setBackground(Color.BLACK);
-		rdbtnCopyFiles.setBounds(23, 206, 134, 25);
+		rdbtnCopyFiles.setBounds(26, 180, 110, 25);
 		rdbtnCopyFiles.addActionListener(actionListener);
 		rdbtnCopyFiles.setSelected(true);
 		
+		
+		// Add the radio buttons to their corresponding groups.
 		fileOperationRadio.add(rdbtnMoveFiles);
 		fileOperationRadio.add(rdbtnCopyFiles);
-		
 		fileTypeRadioG.add(rdbtnAllFileTypes);
 		fileTypeRadioG.add(rdbtnFileTypeList);
 		
+		// Set the default values for the text fields.
 		destinationField = new JTextField();
 		destinationField.setForeground(Color.WHITE);
 		destinationField.setEditable(false);
 		destinationField.setColumns(10);
-		destinationField.setBackground(Color.LIGHT_GRAY);
-		destinationField.setBounds(145, 74, 134, 25);
+		destinationField.setBackground(Color.DARK_GRAY);
+		destinationField.setBounds(135, 74, 134, 25);
 		
 		sourceField = new JTextField();
 		sourceField.setForeground(Color.WHITE);
 		sourceField.setEditable(false);
 		sourceField.setColumns(10);
-		sourceField.setBackground(Color.LIGHT_GRAY);
-		sourceField.setBounds(145, 45, 134, 25);
+		sourceField.setBackground(Color.DARK_GRAY);
+		sourceField.setBounds(135, 45, 134, 25);
 		
+		addFileTypeField = new JTextField();
+		addFileTypeField.setForeground(Color.WHITE);
+		addFileTypeField.setEditable(false);
+		addFileTypeField.setColumns(10);
+		addFileTypeField.setBackground(Color.DARK_GRAY);
+		addFileTypeField.setBounds(320, 45, 134, 25);
+		
+		// Set the default values for the scroll pane.
+		fileTypeScrollPane.setForeground(Color.WHITE);
+		fileTypeScrollPane.setBackground(Color.DARK_GRAY);
+		fileTypeScrollPane.setBounds(320, 74, 214, 160);
+		
+		// Set the default values for the filePanel.
+		// Add elements to the filePanel.
 		filePanel.setBackground(Color.BLACK);
-		filePanel.setBounds(0, 0, 335, 274);
+		filePanel.setBounds(0, 0, 700, 274);
 		filePanel.setLayout(null);
 		filePanel.add(lbldesc1);
 		filePanel.add(destinationField);
 		filePanel.add(lblDestination);
 		filePanel.add(lblSource);
-		filePanel.add(btnDst);
-		filePanel.add(sourceField);
 		filePanel.add(btnSrc);
+		filePanel.add(btnDst);
+		filePanel.add(btnAddFileType);
+		filePanel.add(sourceField);
+		filePanel.add(addFileTypeField);
 		filePanel.add(lblFileTypes);
+		filePanel.add(lblFileOperationType);
+		filePanel.add(lblFileTypeList);
 		filePanel.add(rdbtnMoveFiles);
 		filePanel.add(rdbtnCopyFiles);
 		filePanel.add(rdbtnAllFileTypes);
 		filePanel.add(rdbtnFileTypeList);
-		
+		filePanel.add(fileTypeScrollPane);
 		filePanel.add(startFileOperation);
 		filePanel.add(mainMenuBtn);
 		filePanel.setVisible(false);
 		
+		// Set the default values for the main panel.
+		// Add elements to the mainPanel.
 		mainPanel.setBackground(Color.BLACK);
 		mainPanel.setBounds(0, 0, 319, 152);
 		mainPanel.setLayout(null);
@@ -271,6 +320,7 @@ public class fmGui
 		mainPanel.add(btnOpenGithub);
 		mainPanel.setVisible(true);
 		
+		// Set the default active panel.
 		activePanel = mainPanel;
 		
 	}
@@ -312,17 +362,8 @@ private class MyActionListener implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{	
-			if(e.getSource() == btnSrc)
-			{
-				//Tells the GUI to bring up the path selector for source.
-				chooseSrc();
-			}
-			else if(e.getSource() == btnDst)
-			{
-				//Tells the GUI to bring up the path selector for destination. 
-				chooseDst();
-			}
-			else if(e.getSource() == btnManageFiles)
+			
+			if(e.getSource() == btnManageFiles)
 			{
 				/*This method will make the main panel invisible 
 				 * then make the move panel visible and resize the window.
@@ -333,25 +374,35 @@ private class MyActionListener implements ActionListener
 				mainPanel.setVisible(false);
 				filePanel.setVisible(true);
 				activePanel = filePanel;
-				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 335, 310);
+				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 335, 296);
 			}
-			else if(e.getSource() == btnManageFiles)
+			else if(e.getSource() == btnOpenGithub)
 			{
-				/*This method will make the main panel invisible 
-				 * then make the copy panel visible and resize the window.
-				 * it will also follow the last position of the window when 
-				 * resizing instead of putting it at a hard coded location. 
-				 */
-				filePanel.setVisible(false);
-				mainPanel.setVisible(false);
-				
-				activePanel = filePanel;
-				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 335, 310);
+				fm.openGithub(activePanel);
 			}
 			else if(e.getSource() == btnExit)
 			{
 				//If the exit button on the main panel is clicked, exit the program without an error code.
 				System.exit(0);
+			}
+			else if(e.getSource() == btnSrc)
+			{
+				//Tells the GUI to bring up the path selector for source.
+				chooseSrc();
+			}
+			else if(e.getSource() == btnDst)
+			{
+				//Tells the GUI to bring up the path selector for destination. 
+				chooseDst();
+			}
+			else if(e.getSource() == btnAddFileType)
+			{
+				if(addFileTypeField.getText().contains(".") && addFileTypeField.getText().length() > 0 && addFileTypeField.getText().length() < 10)
+				{
+					// add the item to the list of fileTypes on the GUI.
+					// add a way to remove from the list too.
+					fileTypeScrollPane.getViewport().add(fileTypesList);
+				}
 			}
 			else if(e.getSource() == startFileOperation)
 			{
@@ -395,16 +446,6 @@ private class MyActionListener implements ActionListener
 				}
 				
 			}
-			else if(e.getSource() == rdbtnCopyFiles)
-			{
-				// this function will handle the copy function.
-				startFileOperation.setText("Copy Files");
-			}
-			else if(e.getSource() == rdbtnMoveFiles)
-			{
-				//makes custom field become uneditable until another option is selected.
-				startFileOperation.setText("Move Files");
-			}
 			else if(e.getSource() == mainMenuBtn)
 			{
 				/*Takes the GUI back to the main menu by making the move panel invisible and the main panel visible again.
@@ -415,12 +456,37 @@ private class MyActionListener implements ActionListener
 				mainPanel.setVisible(true);
 				filePanel.setVisible(false);
 				activePanel = mainPanel;
-				frmSabreFileManager.setBounds(x, y, 324, 184);
+				frmSabreFileManager.setBounds(x, y, 324, 174);
 			}
-			else if(e.getSource() == btnOpenGithub)
+			
+			else if(e.getSource() == rdbtnAllFileTypes)
 			{
-				fm.openGithub(activePanel);
+				addFileTypeField.setText("");
+				addFileTypeField.setEditable(false);
+				addFileTypeField.setVisible(false);
+				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 335, 296);
 			}
+			else if(e.getSource() == rdbtnFileTypeList)
+			{
+				//Show the gui elements for the custom file type list.
+				addFileTypeField.setEditable(true);
+				addFileTypeField.setVisible(true);
+				addFileTypeField.setForeground(Color.WHITE);
+				addFileTypeField.setBackground(Color.DARK_GRAY);
+				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 572, 296);
+			}
+			
+			else if(e.getSource() == rdbtnCopyFiles)
+			{
+				// this function will handle the copy function.
+				startFileOperation.setText("Copy Files");
+			}
+			else if(e.getSource() == rdbtnMoveFiles)
+			{
+				//makes custom field become uneditable until another option is selected.
+				startFileOperation.setText("Move Files");
+			}
+			
 		}
 	}
 }
