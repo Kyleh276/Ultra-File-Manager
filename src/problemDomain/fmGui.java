@@ -1,5 +1,5 @@
 /*************************************************************************
-** Author: JiinxC														**
+** Author: Kyle Hendrickson												**
 ** Name: Ultra File Manager	   									    	**
 ** Purpose: Used to quickly move or copy many files for point A to B.  	**
 ** Date: 10/6/2017														**
@@ -10,7 +10,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Font;
+
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -18,10 +21,11 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
+import javax.swing.ListSelectionModel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
@@ -49,6 +53,7 @@ public class fmGui
 	private JLabel lblFileTypes = new JLabel("Select the file types to process:");
 	private JLabel lblFileOperationType = new JLabel("Select the operation type:");
 	private JLabel lblFileTypeList = new JLabel("Add the desired file types:");
+	private JLabel lblFileTypeListSize = new JLabel("File types: 0/50");
 	
 	private JButton btnManageFiles = new JButton("Manage Files");
 	private JButton btnExit = new JButton("Exit");
@@ -60,7 +65,10 @@ public class fmGui
 	private JButton btnDst = new JButton("...");
 	private JButton btnAddFileType = new JButton("Add");
 	
-	private JList fileTypesList = new JList();
+	
+	
+	private DefaultListModel<String> fileTypesModel = new DefaultListModel<>();
+	private JList<String> fileTypesJList = new JList<>(fileTypesModel);
 	
 	private ButtonGroup fileOperationRadio = new ButtonGroup();
 	private ButtonGroup fileTypeRadioG = new ButtonGroup();
@@ -72,7 +80,7 @@ public class fmGui
 	private JRadioButton rdbtnAllFileTypes = new JRadioButton("All Types");
 	private JRadioButton rdbtnFileTypeList = new JRadioButton("Custom Types");
 	
-	private JScrollPane fileTypeScrollPane = new JScrollPane(fileTypesList);
+	//private JScrollPane fileTypeScrollPane = new JScrollPane(fileTypesList);
 	
 	
 	// make check boxes for the user to decide the file types.
@@ -87,6 +95,7 @@ public class fmGui
 	
 	
 	private FileManager fm = new FileManager();
+	
 
 	public static void main(String[] args)
 	{
@@ -167,6 +176,10 @@ public class fmGui
 		lblFileTypeList.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		lblFileTypeList.setForeground(Color.WHITE);
 		lblFileTypeList.setBounds(320, 15, 272, 16);
+		
+		lblFileTypeListSize.setBounds(320,213,150,16);
+		lblFileTypeListSize.setForeground(Color.WHITE);
+		lblFileTypeListSize.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		
 		// Set the default values for the buttons.
 		btnManageFiles.setBounds(86, 35, 153, 25);
@@ -261,27 +274,40 @@ public class fmGui
 		destinationField.setForeground(Color.WHITE);
 		destinationField.setEditable(false);
 		destinationField.setColumns(10);
-		destinationField.setBackground(Color.DARK_GRAY);
+		destinationField.setBorder(null);
+		destinationField.setBackground(Color.GRAY);
 		destinationField.setBounds(135, 74, 134, 25);
 		
 		sourceField = new JTextField();
 		sourceField.setForeground(Color.WHITE);
 		sourceField.setEditable(false);
+		sourceField.setBorder(null);
 		sourceField.setColumns(10);
-		sourceField.setBackground(Color.DARK_GRAY);
+		sourceField.setBackground(Color.GRAY);
 		sourceField.setBounds(135, 45, 134, 25);
 		
 		addFileTypeField = new JTextField();
 		addFileTypeField.setForeground(Color.WHITE);
 		addFileTypeField.setEditable(false);
+		addFileTypeField.setBorder(null);
+		addFileTypeField.setCaretColor(Color.WHITE);
 		addFileTypeField.setColumns(10);
-		addFileTypeField.setBackground(Color.DARK_GRAY);
+		addFileTypeField.setBackground(Color.GRAY);
 		addFileTypeField.setBounds(320, 45, 134, 25);
 		
+		//fileTypesModel.addElement("testing 123");
+		fileTypesJList.setModel(fileTypesModel);
+		fileTypesJList.setBounds(320,74,214,130);
+		fileTypesJList.setVisible(true);
+		fileTypesJList.setBackground(Color.GRAY);
+		fileTypesJList.setForeground(Color.WHITE);
+		fileTypesJList.setFixedCellWidth(214);
+		fileTypesJList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		fileTypesJList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		fileTypesJList.setVisibleRowCount(-1);
+		
+		//fileTypesJList.setVisible(true);
 		// Set the default values for the scroll pane.
-		fileTypeScrollPane.setForeground(Color.WHITE);
-		fileTypeScrollPane.setBackground(Color.DARK_GRAY);
-		fileTypeScrollPane.setBounds(320, 74, 214, 160);
 		
 		// Set the default values for the filePanel.
 		// Add elements to the filePanel.
@@ -302,9 +328,10 @@ public class fmGui
 		filePanel.add(lblFileTypeList);
 		filePanel.add(rdbtnMoveFiles);
 		filePanel.add(rdbtnCopyFiles);
+		filePanel.add(lblFileTypeListSize);
 		filePanel.add(rdbtnAllFileTypes);
 		filePanel.add(rdbtnFileTypeList);
-		filePanel.add(fileTypeScrollPane);
+		filePanel.add(fileTypesJList);
 		filePanel.add(startFileOperation);
 		filePanel.add(mainMenuBtn);
 		filePanel.setVisible(false);
@@ -397,11 +424,30 @@ private class MyActionListener implements ActionListener
 			}
 			else if(e.getSource() == btnAddFileType)
 			{
-				if(addFileTypeField.getText().contains(".") && addFileTypeField.getText().length() > 0 && addFileTypeField.getText().length() < 10)
+				// if the text starts with exactly one dot, and has between 1 and 10 chars following it, that are alphanumeric.
+				if(addFileTypeField.getText().matches("[.]{1}[A-Za-z0-9]{1,11}+"))
 				{
-					// add the item to the list of fileTypes on the GUI.
-					// add a way to remove from the list too.
-					fileTypeScrollPane.getViewport().add(fileTypesList);
+					
+					// if the fileType is not already in the list and the list is not full.
+					if(!fileTypesModel.contains(addFileTypeField.getText().strip()) && fileTypesModel.getSize() <= 50)
+					{
+						int fileTypesModelSize = fileTypesModel.getSize() + 1;
+						lblFileTypeListSize.setText("File types: " + fileTypesModelSize + "/50");
+						fileTypesModel.addElement(addFileTypeField.getText());
+						fileTypesJList.setModel(fileTypesModel);
+						
+						
+					}
+					System.out.println(addFileTypeField.getText());
+					// to do:
+					// ability to delete from the list
+					// scroll bar for list
+					// make sure that the radio buttons get set back to default if the user goes to the main menu.
+					// organize user file type list into alphabetical order.
+					// make the last added file type the current selection
+					// make file types capitals?
+					
+					
 				}
 			}
 			else if(e.getSource() == startFileOperation)
@@ -471,8 +517,6 @@ private class MyActionListener implements ActionListener
 				//Show the gui elements for the custom file type list.
 				addFileTypeField.setEditable(true);
 				addFileTypeField.setVisible(true);
-				addFileTypeField.setForeground(Color.WHITE);
-				addFileTypeField.setBackground(Color.DARK_GRAY);
 				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 572, 296);
 			}
 			
