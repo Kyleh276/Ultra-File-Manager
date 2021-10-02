@@ -1,5 +1,5 @@
 /*************************************************************************
-** Author: JiinxC														**
+** Author: Kyle Hendrickson												**
 ** Name: Ultra File Manager 	   									    **
 ** Purpose: Used to quickly move or copy many files for point A to B.   **
 ** Date: 10/6/2017														**
@@ -10,7 +10,7 @@ import java.io.File;
 
 public class createFolders extends Thread
 {
-	/*The entire point of this file is to create folders int the destination
+	/*The entire point of this file is to create folders in the destination
 	 *  in order to organize them.
 	 */
 	FileManager fm = new FileManager();
@@ -33,7 +33,7 @@ public class createFolders extends Thread
 	}
 	public void createCustom(String end)
 	{
-		//Makes a custom folder for the custom filetype that is inputed.
+		//Makes a custom folder for the custom file type that is inputed.
 			String path = end;
 			new File(path).mkdirs();
 	}

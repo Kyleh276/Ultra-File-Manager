@@ -21,11 +21,15 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
@@ -64,11 +68,13 @@ public class fmGui
 	private JButton btnSrc = new JButton("...");
 	private JButton btnDst = new JButton("...");
 	private JButton btnAddFileType = new JButton("Add");
+	private JButton btnDeleteFileType = new JButton("Remove");
 	
 	
 	
 	private DefaultListModel<String> fileTypesModel = new DefaultListModel<>();
 	private JList<String> fileTypesJList = new JList<>(fileTypesModel);
+	private JScrollPane scroller = new JScrollPane(fileTypesJList);
 	
 	private ButtonGroup fileOperationRadio = new ButtonGroup();
 	private ButtonGroup fileTypeRadioG = new ButtonGroup();
@@ -96,6 +102,7 @@ public class fmGui
 	
 	private FileManager fm = new FileManager();
 	
+	
 
 	public static void main(String[] args)
 	{
@@ -118,7 +125,7 @@ public class fmGui
 	}
 	public fmGui()
 	{
-		//This initilizes all the guis components and creates the panels for main menu, copy and move.
+		//This initializes all the gui's components and creates the panels for main menu, copy and move.
 		initialize();
 	}
 	public String getDestination()
@@ -141,7 +148,7 @@ public class fmGui
 		frmSabreFileManager.setBackground(Color.BLACK);
 		frmSabreFileManager.getContentPane().setBackground(Color.BLACK);
 		frmSabreFileManager.getContentPane().setForeground(Color.WHITE);
-		frmSabreFileManager.setBounds(100, 100, 324, 174);
+		frmSabreFileManager.setBounds(100, 100, 318, 174);
 		frmSabreFileManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSabreFileManager.getContentPane().setLayout(null);
 		frmSabreFileManager.getContentPane().add(mainPanel);
@@ -149,7 +156,7 @@ public class fmGui
 		frmSabreFileManager.getContentPane().add(filePanel);
 		
 		// Set the default values for the labels.
-		lblStart.setBounds(80, 10, 279, 16);
+		lblStart.setBounds(70, 10, 279, 16);
 		lblStart.setFont(new Font("OCR A Extended", Font.PLAIN, 15));
 		lblStart.setForeground(Color.WHITE);
 		
@@ -182,21 +189,21 @@ public class fmGui
 		lblFileTypeListSize.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		
 		// Set the default values for the buttons.
-		btnManageFiles.setBounds(86, 35, 153, 25);
+		btnManageFiles.setBounds(74, 35, 154, 25);
 		btnManageFiles.addActionListener(actionListener);
 		btnManageFiles.setFont(new Font("OCR A Extended", Font.PLAIN, 15));
 		btnManageFiles.setBackground(Color.BLACK);
 		btnManageFiles.setForeground(Color.WHITE);
 		btnManageFiles.setFocusPainted(false);
 		
-		btnOpenGithub.setBounds(86, 90, 153, 25);
+		btnOpenGithub.setBounds(74, 59, 154, 25);
 		btnOpenGithub.addActionListener(actionListener);
 		btnOpenGithub.setForeground(Color.WHITE);
 		btnOpenGithub.setFont(new Font("OCR A Extended", Font.PLAIN, 15));
 		btnOpenGithub.setBackground(Color.BLACK);
 		btnOpenGithub.setFocusPainted(false);
 		
-		btnExit.setBounds(86, 59, 153, 25);
+		btnExit.setBounds(74, 83, 154, 25);
 		btnExit.addActionListener(actionListener);
 		btnExit.setForeground(Color.WHITE);
 		btnExit.setFont(new Font("OCR A Extended", Font.PLAIN, 15));
@@ -209,6 +216,7 @@ public class fmGui
 		btnSrc.setBackground(Color.BLACK);
 		btnSrc.setBounds(270, 45, 25, 25);
 		btnSrc.setVerticalAlignment(3);
+		btnSrc.setFocusPainted(false);
 		
 		btnDst.setForeground(Color.WHITE);
 		btnDst.setFont(new Font("Arial", Font.BOLD, 16));
@@ -216,24 +224,35 @@ public class fmGui
 		btnDst.setBounds(270, 74, 25, 25);
 		btnDst.setVerticalAlignment(3);
 		btnDst.addActionListener(actionListener);
+		btnDst.setFocusPainted(false);
 		
 		btnAddFileType.setForeground(Color.WHITE);
 		btnAddFileType.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		btnAddFileType.setBackground(Color.BLACK);
 		btnAddFileType.setBounds(455, 45, 80, 25);
 		btnAddFileType.addActionListener(actionListener);
+		btnAddFileType.setFocusPainted(false);
+		
+		btnDeleteFileType.setForeground(Color.WHITE);
+		btnDeleteFileType.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
+		btnDeleteFileType.setBackground(Color.BLACK);
+		btnDeleteFileType.setBounds(453, 210, 82, 25);
+		btnDeleteFileType.addActionListener(actionListener);
+		btnDeleteFileType.setFocusPainted(false);
 		
 		startFileOperation.setForeground(Color.WHITE);
 		startFileOperation.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		startFileOperation.setBackground(Color.BLACK);
 		startFileOperation.setBounds(180, 210, 118, 25);
 		startFileOperation.addActionListener(actionListener);
+		startFileOperation.setFocusPainted(false);
 		
 		mainMenuBtn.setForeground(Color.WHITE);
 		mainMenuBtn.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		mainMenuBtn.setBackground(Color.BLACK);
 		mainMenuBtn.setBounds(26, 210, 118, 25);
 		mainMenuBtn.addActionListener(actionListener);
+		mainMenuBtn.setFocusPainted(false);
 		
 		
 		// Set the default values for the radio buttons.
@@ -242,18 +261,22 @@ public class fmGui
 		rdbtnAllFileTypes.setBackground(Color.BLACK);
 		rdbtnAllFileTypes.setBounds(26, 126, 118, 25);
 		rdbtnAllFileTypes.addActionListener(actionListener);
+		rdbtnAllFileTypes.setFocusPainted(false);
+		rdbtnAllFileTypes.setSelected(true);
 		
 		rdbtnFileTypeList.setForeground(Color.WHITE);
 		rdbtnFileTypeList.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		rdbtnFileTypeList.setBackground(Color.BLACK);
 		rdbtnFileTypeList.setBounds(140, 126, 130, 25);
 		rdbtnFileTypeList.addActionListener(actionListener);
+		rdbtnFileTypeList.setFocusPainted(false);
 		
 		rdbtnMoveFiles.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		rdbtnMoveFiles.setForeground(Color.WHITE);
 		rdbtnMoveFiles.setBackground(Color.BLACK);
 		rdbtnMoveFiles.setBounds(140, 180, 134, 25);
 		rdbtnMoveFiles.addActionListener(actionListener);
+		rdbtnMoveFiles.setFocusPainted(false);
 		
 		rdbtnCopyFiles.setFont(new Font("OCR A Extended", Font.PLAIN, 13));
 		rdbtnCopyFiles.setForeground(Color.WHITE);
@@ -261,7 +284,7 @@ public class fmGui
 		rdbtnCopyFiles.setBounds(26, 180, 110, 25);
 		rdbtnCopyFiles.addActionListener(actionListener);
 		rdbtnCopyFiles.setSelected(true);
-		
+		rdbtnCopyFiles.setFocusPainted(false);
 		
 		// Add the radio buttons to their corresponding groups.
 		fileOperationRadio.add(rdbtnMoveFiles);
@@ -277,6 +300,9 @@ public class fmGui
 		destinationField.setBorder(null);
 		destinationField.setBackground(Color.GRAY);
 		destinationField.setBounds(135, 74, 134, 25);
+		destinationField.setFont(new Font("Arial", Font.BOLD, 13));
+		destinationField.setSelectedTextColor(Color.BLACK);
+		destinationField.setSelectionColor(Color.YELLOW);
 		
 		sourceField = new JTextField();
 		sourceField.setForeground(Color.WHITE);
@@ -285,6 +311,9 @@ public class fmGui
 		sourceField.setColumns(10);
 		sourceField.setBackground(Color.GRAY);
 		sourceField.setBounds(135, 45, 134, 25);
+		sourceField.setFont(new Font("Arial", Font.BOLD, 13));
+		sourceField.setSelectedTextColor(Color.BLACK);
+		sourceField.setSelectionColor(Color.YELLOW);
 		
 		addFileTypeField = new JTextField();
 		addFileTypeField.setForeground(Color.WHITE);
@@ -294,25 +323,37 @@ public class fmGui
 		addFileTypeField.setColumns(10);
 		addFileTypeField.setBackground(Color.GRAY);
 		addFileTypeField.setBounds(320, 45, 134, 25);
+		addFileTypeField.addActionListener(actionListener);
+		addFileTypeField.setSelectedTextColor(Color.BLACK);
+		addFileTypeField.setSelectionColor(Color.YELLOW);
+		addFileTypeField.setFont(new Font("Arial", Font.BOLD, 15));
 		
 		//fileTypesModel.addElement("testing 123");
+		
+		
 		fileTypesJList.setModel(fileTypesModel);
 		fileTypesJList.setBounds(320,74,214,130);
 		fileTypesJList.setVisible(true);
 		fileTypesJList.setBackground(Color.GRAY);
 		fileTypesJList.setForeground(Color.WHITE);
 		fileTypesJList.setFixedCellWidth(214);
-		fileTypesJList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		fileTypesJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		fileTypesJList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		fileTypesJList.setVisibleRowCount(-1);
+		fileTypesJList.setSelectionBackground(Color.YELLOW);
+		fileTypesJList.setSelectionForeground(Color.BLACK);
+		fileTypesJList.setFont(new Font("Arial", Font.BOLD, 15));
 		
-		//fileTypesJList.setVisible(true);
 		// Set the default values for the scroll pane.
+		scroller.setBounds(320,74,214,130);
+		scroller.setVisible(true);
+		scroller.setBorder(null);
+		//scroller.addMouseListener();
 		
 		// Set the default values for the filePanel.
 		// Add elements to the filePanel.
 		filePanel.setBackground(Color.BLACK);
-		filePanel.setBounds(0, 0, 700, 274);
+		filePanel.setBounds(0, 0, 700, 261);
 		filePanel.setLayout(null);
 		filePanel.add(lbldesc1);
 		filePanel.add(destinationField);
@@ -321,6 +362,7 @@ public class fmGui
 		filePanel.add(btnSrc);
 		filePanel.add(btnDst);
 		filePanel.add(btnAddFileType);
+		filePanel.add(btnDeleteFileType);
 		filePanel.add(sourceField);
 		filePanel.add(addFileTypeField);
 		filePanel.add(lblFileTypes);
@@ -331,7 +373,8 @@ public class fmGui
 		filePanel.add(lblFileTypeListSize);
 		filePanel.add(rdbtnAllFileTypes);
 		filePanel.add(rdbtnFileTypeList);
-		filePanel.add(fileTypesJList);
+		//filePanel.add(fileTypesJList);
+		filePanel.add(scroller);
 		filePanel.add(startFileOperation);
 		filePanel.add(mainMenuBtn);
 		filePanel.setVisible(false);
@@ -339,7 +382,7 @@ public class fmGui
 		// Set the default values for the main panel.
 		// Add elements to the mainPanel.
 		mainPanel.setBackground(Color.BLACK);
-		mainPanel.setBounds(0, 0, 319, 152);
+		mainPanel.setBounds(0, 0, 318, 152);
 		mainPanel.setLayout(null);
 		mainPanel.add(lblStart);
 		mainPanel.add(btnManageFiles);
@@ -401,7 +444,7 @@ private class MyActionListener implements ActionListener
 				mainPanel.setVisible(false);
 				filePanel.setVisible(true);
 				activePanel = filePanel;
-				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 335, 296);
+				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 335, 287);
 			}
 			else if(e.getSource() == btnOpenGithub)
 			{
@@ -422,33 +465,42 @@ private class MyActionListener implements ActionListener
 				//Tells the GUI to bring up the path selector for destination. 
 				chooseDst();
 			}
-			else if(e.getSource() == btnAddFileType)
+			else if(e.getSource() == btnAddFileType || e.getSource() == addFileTypeField)
 			{
+				
 				// if the text starts with exactly one dot, and has between 1 and 10 chars following it, that are alphanumeric.
 				if(addFileTypeField.getText().matches("[.]{1}[A-Za-z0-9]{1,11}+"))
 				{
 					
 					// if the fileType is not already in the list and the list is not full.
-					if(!fileTypesModel.contains(addFileTypeField.getText().strip()) && fileTypesModel.getSize() <= 50)
+					if(!fileTypesModel.contains(addFileTypeField.getText().strip().toUpperCase()) && fileTypesModel.getSize() <= 50)
 					{
+						
 						int fileTypesModelSize = fileTypesModel.getSize() + 1;
 						lblFileTypeListSize.setText("File types: " + fileTypesModelSize + "/50");
-						fileTypesModel.addElement(addFileTypeField.getText());
+						fileTypesModel.addElement(addFileTypeField.getText().toUpperCase());
 						fileTypesJList.setModel(fileTypesModel);
-						
-						
-					}
-					System.out.println(addFileTypeField.getText());
-					// to do:
-					// ability to delete from the list
-					// scroll bar for list
-					// make sure that the radio buttons get set back to default if the user goes to the main menu.
-					// organize user file type list into alphabetical order.
-					// make the last added file type the current selection
-					// make file types capitals?
-					
-					
+					}					
 				}
+			}
+			else if(e.getSource() == btnDeleteFileType)
+			{
+				// get the current selection with
+				fileTypesJList.getSelectedIndices();
+				//set up counter for number in list.
+				int removed = 0;
+				// set up the variable that will count the list for gui updating.
+				int fileTypesModelSize;
+				// run loop and remove all selected types.
+				for(int selectedType : fileTypesJList.getSelectedIndices())
+				{
+					fileTypesModel.remove(selectedType - removed);
+					fileTypesModelSize = fileTypesModel.getSize();
+					lblFileTypeListSize.setText("File types: " + fileTypesModelSize + "/50");
+					removed++;
+				}
+				//remove them from the model
+				fileTypesJList.setModel(fileTypesModel);
 			}
 			else if(e.getSource() == startFileOperation)
 			{
@@ -502,7 +554,10 @@ private class MyActionListener implements ActionListener
 				mainPanel.setVisible(true);
 				filePanel.setVisible(false);
 				activePanel = mainPanel;
-				frmSabreFileManager.setBounds(x, y, 324, 174);
+				rdbtnAllFileTypes.setSelected(true);
+				rdbtnCopyFiles.setSelected(true);
+				addFileTypeField.setText("");
+				frmSabreFileManager.setBounds(x, y, 318, 174);
 			}
 			
 			else if(e.getSource() == rdbtnAllFileTypes)
@@ -510,14 +565,14 @@ private class MyActionListener implements ActionListener
 				addFileTypeField.setText("");
 				addFileTypeField.setEditable(false);
 				addFileTypeField.setVisible(false);
-				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 335, 296);
+				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 335, 287);
 			}
 			else if(e.getSource() == rdbtnFileTypeList)
 			{
 				//Show the gui elements for the custom file type list.
 				addFileTypeField.setEditable(true);
 				addFileTypeField.setVisible(true);
-				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 572, 296);
+				frmSabreFileManager.setBounds(frmSabreFileManager.getBounds().x, frmSabreFileManager.getBounds().y, 572, 287);
 			}
 			
 			else if(e.getSource() == rdbtnCopyFiles)

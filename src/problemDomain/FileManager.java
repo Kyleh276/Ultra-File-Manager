@@ -1,5 +1,5 @@
 /*************************************************************************
-** Author: JiinxC														**
+** Author: Kyle Hendrickson													**
 ** Name: Ultra File Manager	   									        **
 ** Purpose: Used to quickly move or copy many files for point A to B.   **
 ** Date: 10/6/2017														**
@@ -111,6 +111,13 @@ public class FileManager extends Thread
 	}
 	protected List<String> copyFiles(JPanel activePanel)
 	{
+		// to do:
+		// copy
+		// copy custom list
+		// move custom list
+		// also need to include error handling that actually tells you what is wrong.
+		// optimize and clean up for 1.0
+		
 		List<String> failedList = new ArrayList<>();
 		return failedList;
 	}
@@ -169,12 +176,12 @@ public class FileManager extends Thread
 			{
 				if(JOptionPane.showConfirmDialog(activePanel, "This will open a new page in your browser.") == 0)
 				{
-					Desktop.getDesktop().browse(new URI("https://github.com/JiinxC/Ultra-File-Manager"));
+					Desktop.getDesktop().browse(new URI("https://github.com/Kyleh276/"));
 				}
 				
 			} catch (IOException | URISyntaxException e)
 			{
-				JOptionPane.showConfirmDialog(activePanel, "Unable to open page! the link is:\r\nhttps://gitbuh.com/JiinxC/Ultra-File-Manager");
+				JOptionPane.showConfirmDialog(activePanel, "Unable to open page! The link is:\r\nhttps://github.com/Kyleh276/");
 			}
 	}
 }
