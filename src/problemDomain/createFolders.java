@@ -10,31 +10,19 @@ import java.io.File;
 
 public class createFolders extends Thread
 {
-	/*The entire point of this file is to create folders in the destination
-	 *  in order to organize them.
-	 */
+	// Create a FileManager object.
 	FileManager fm = new FileManager();
 	
-	public createFolders()
-	{
-		//This method creates an object in order to reference the below methods.
-	}
 	public void createFolder(String end)
 	{
-		//This method will create all the folders needed for the default setting.
-		//specify file variable in order to close the file after creation?
+		// This method will create all the folders that are needed.
 		
-		// Create file with the correct destination.
+		// Create folder at the specified destination.
 		File folder = new File(end);
-		// If the doesn't folder already exist.
+		
+		// If the folder doesn't already exist.
 		if(!folder.exists())
 			// Create the folder.
 			folder.mkdirs();
-	}
-	public void createCustom(String end)
-	{
-		//Makes a custom folder for the custom file type that is inputed.
-			String path = end;
-			new File(path).mkdirs();
 	}
 }
