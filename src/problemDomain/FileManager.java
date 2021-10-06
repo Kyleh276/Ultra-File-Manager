@@ -66,7 +66,7 @@ public class FileManager extends Thread
 		for(File file : list)
 		{
 			// If the current file is not a directory
-			if(!file.isDirectory())
+			if(!file.isDirectory() && !file.getPath().contains("desktop.ini"))
 			{
 				// Set the source path of the file.
 				sourceFilePath = Paths.get(file.getPath());
@@ -140,7 +140,7 @@ public class FileManager extends Thread
 		for(File file : list)
 		{
 			// If the file is not a directory.
-			if(!file.isDirectory())
+			if(!file.isDirectory() && !file.getPath().contains("desktop.ini"))
 			{
 				// Set the source path of the file.
 				sourceFilePath = Paths.get(file.getPath());
