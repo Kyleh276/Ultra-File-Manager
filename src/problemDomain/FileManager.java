@@ -72,7 +72,7 @@ public class FileManager extends Thread
 				sourceFilePath = Paths.get(file.getPath());
 						
 				// Set the destination path of the file.
-				destFilePath = Paths.get(destinationFolder.toString() + "\\" + file.getPath().substring(file.getPath().lastIndexOf('.')).toUpperCase() + "\\" + file.getName());
+				destFilePath = Paths.get(destinationFolder.toString() + "\\" + file.getPath().substring(file.getPath().lastIndexOf('.') + 1).toUpperCase() + "\\" + file.getName());
 						
 				// If the method was called with a custom file type list, and the current file has an extension that is within the custom list.
 				if(fileTypesList != null && fileTypesList.contains(file.getPath().substring(file.getPath().lastIndexOf(".")).toUpperCase()))
@@ -146,7 +146,7 @@ public class FileManager extends Thread
 				sourceFilePath = Paths.get(file.getPath());
 						
 				// Set the destination path of the file.
-				destFilePath = Paths.get(destinationFolder.toString() + "\\" + file.getPath().substring(file.getPath().lastIndexOf('.')).toUpperCase() + "\\" + file.getName());
+				destFilePath = Paths.get(destinationFolder.toString() + "\\" + file.getPath().substring(file.getPath().lastIndexOf('.') + 1).toUpperCase() + "\\" + file.getName());
 					
 				// If the list of custom file types is not null, and the list contains the file's extension.
 				if(fileTypesList != null && fileTypesList.contains(file.getPath().substring(file.getPath().lastIndexOf(".")).toUpperCase()))

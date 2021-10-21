@@ -492,7 +492,7 @@ private class MyActionListener implements ActionListener
 				if(addFileTypeField.getText().matches("[.]{1}[A-Za-z0-9]{1,11}+"))
 				{
 					// If the file type is not already in the list and the list is not full.
-					if(!fileTypesModel.contains(addFileTypeField.getText().strip().toUpperCase()) && fileTypesModel.getSize() <= 50)
+					if(!fileTypesModel.contains(addFileTypeField.getText().trim().toUpperCase()) && fileTypesModel.getSize() <= 50)
 					{
 						// Offset the size of the model so that the GUI label is correct.
 						int fileTypesModelSize = fileTypesModel.getSize() + 1;
